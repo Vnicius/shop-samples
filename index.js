@@ -1,104 +1,117 @@
-var http = require('http');
-var fs = require('fs');
+var http = require('http'),
+    fs = require('fs');
 
 const hostname = '127.0.0.1';
-const port = 3002;
+const port = 3005;
 
-var htmlFile;
-var cssFile;
-var productJS;
-var cartJS;
-var classesJS;
-var formatJS;
-var scriptsJS;
-
-fs.readFile('./index.html', function(err, data) {
-  if (err){
-      throw err;
-  }
-  htmlFile = data;
-});
-
-fs.readFile('./css/styles.css', function(err, data) {
-  if (err){
-      throw err;
-  }
-  cssFile = data;
-});
-
-fs.readFile('./data/products.js', function(err, data) {
-  if (err){
-      throw err;
-  }
-  productJS = data;
-});
-
-fs.readFile('./js/cart.js', function(err, data) {
-  if (err){
-      throw err;
-  }
-  cartJS = data;
-});
-
-fs.readFile('./js/classes.js', function(err, data) {
-  if (err){
-      throw err;
-  }
-  classesJS = data;
-});
-
-fs.readFile('./js/formatMoney.js', function(err, data) {
-    if (err){
-        throw err;
-    }
-    formatJS = data;
-});
-
-fs.readFile('./js/scripts.js', function(err, data) {
-  if (err){
-      throw err;
-  }
-  scriptsJS = data;
-});
+var resData;
 
 const server = http.createServer((req, res) => {
-     
-    console.log("URL: " + req.url);
-    switch(req.url){    
-        case '/': 
-            res.writeHead(200, {"Content-Type": "text/html"});
-            res.write(htmlFile);
-            break;
-        case '/css/styles.css':
-            res.writeHead(200, {"Content-Type": "text/css"});
-            res.write(cssFile);
-            break;
-        case '/data/products.js':
-            res.writeHead(200, {"Content-Type": "text/javascript"});
-            res.write(productJS);
-            break;      
-        case '/js/cart.js':
-            res.writeHead(200, {"Content-Type": "text/javascript"});
-            res.write(cartJS);
-            break;    
-        case '/js/classes.js':
-            res.writeHead(200, {"Content-Type": "text/javascript"});
-            res.write(classesJS);
-            break;    
-        case '/js/formatMoney.js':
-            res.writeHead(200, {"Content-Type": "text/javascript"});
-            res.write(formatJS);
-            break;    
-        case '/js/scripts.js':
-            res.writeHead(200, {"Content-Type": "text/javascript"});
-            res.write(scriptsJS);
-            break;
-        default:
+
+    var url = req.url.match(new RegExp(/([^\?]+)\??.*/))[1];
+    console.log("REQUEST URL: " + req.url);
+
+    function productRequest(error, data) {
+        if (error) {
             res.writeHead(404, "Not Found");
-}
-  res.end();
+        }
+
+        resData = data;
+
+        console.log(url);
+
+        switch (url) {
+            case '/product/index.html':
+                res.writeHead(200, { "Content-Type": "text/html" });
+                res.write(resData);
+                break;
+            case '/product/css/styles.css':
+                res.writeHead(200, { "Content-Type": "text/css" });
+                res.write(resData);
+                break;
+            case '/product/js/scripts.js':
+                res.writeHead(200, { "Content-Type": "text/javascript" });
+                res.write(resData);
+                break;
+            case '/css/styles.css':
+                res.writeHead(200, { "Content-Type": "text/css" });
+                res.write(resData);
+                break;
+            case '/data/products.js':
+                res.writeHead(200, { "Content-Type": "text/javascript" });
+                res.write(resData);
+                break;
+            case '/js/cart.js':
+                res.writeHead(200, { "Content-Type": "text/javascript" });
+                res.write(resData);
+                break;
+            case '/js/classes.js':
+                res.writeHead(200, { "Content-Type": "text/javascript" });
+                res.write(resData);
+                break;
+            case '/js/formatMoney.js':
+                res.writeHead(200, { "Content-Type": "text/javascript" });
+                res.write(resData);
+                break;
+        }
+        res.end();
+    }
+
+    function callback(error, data) {
+
+        if (error) {
+            res.writeHead(404, "Not Found");
+        }
+
+        resData = data;
+
+
+        console.log(url);
+
+        switch (url) {
+            case '/':
+                res.writeHead(200, { "Content-Type": "text/html" });
+                res.write(resData);
+                break;
+            case '/css/styles.css':
+                res.writeHead(200, { "Content-Type": "text/css" });
+                res.write(resData);
+                break;
+            case '/data/products.js':
+                res.writeHead(200, { "Content-Type": "text/javascript" });
+                res.write(resData);
+                break;
+            case '/js/cart.js':
+                res.writeHead(200, { "Content-Type": "text/javascript" });
+                res.write(resData);
+                break;
+            case '/js/classes.js':
+                res.writeHead(200, { "Content-Type": "text/javascript" });
+                res.write(resData);
+                break;
+            case '/js/formatMoney.js':
+                res.writeHead(200, { "Content-Type": "text/javascript" });
+                res.write(resData);
+                break;
+            case '/js/scripts.js':
+                res.writeHead(200, { "Content-Type": "text/javascript" });
+                res.write(resData);
+                break;
+        }
+        res.end();
+    }
+
+    if (url === '/' || url === '/index.html') {
+        fs.readFile('./index.html', callback);
+    } else if (url === '/product/index.html') {
+        fs.readFile('./product/index.html', productRequest);
+    } else {
+        console.log("NEW REQ: " + req.url);
+        fs.readFile('.' + req.url, callback);
+    }
+
 });
 
 server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
+    console.log(`Server running at http://${hostname}:${port}/`);
 });
