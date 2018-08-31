@@ -1,0 +1,19 @@
+.product-details {
+  padding: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: flex-start;
+}
+
+.product-thumb-full {
+  display: inline-block;
+  width: 300px;
+  height: 300px;
+  background-color: blueviolet;
+}
+
+.product-misc {
+  display: inline-block;
+  margin: 10px;
+}

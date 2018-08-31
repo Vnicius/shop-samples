@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Product Page</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <script src="../data/products.js"></script>
+    <script src="../js/formatMoney.js"></script>
+    <script src="../js/classes.js"></script>
+    <script src="js/scripts.js"></script>
+    <script src="../js/cart.js"></script>
+</head>
+
+<body>
+    <div id="shopping-list" class="shopping-list">
+        <h3 id="shopping-list-title">Shopping List</h3>
+        <div id="shopping-cart" class="shopping-cart">
+            <ul id="shopping-cart-list">
+            </ul>
+            <button>Checkout</button>
+        </div>
+    </div>
+
+    <section id="list-products">
+        <aside class="categories-list">
+            <ul id="list-categories">
+            </ul>
+        </aside>
+        <nav id="stack-pages">
+            <a href="../index.html">Home</a>
+        </nav>
+        <section id="product-especs" class="product-especs">
+            <article>
+                <div class="product-details">
+                    <img id="product-thumb" class="product-thumb-full" src="#" />
+                    <div class="product-misc">
+                        <span id="product-name" class="product-name" href="#">Name</span>
+                        <div>
+                            <strong id="product-price" class="product-price">
+                                Price
+                            </strong>
+                            <button id="product-btn-add" class="product-btn-add">Add</button>
+                        </div>
+                    </div>
+                </div>
+                <p id="product-description">
+                </p>
+            </article>
+        </section>
+    </section>
+
+</body>
+
+</html>
