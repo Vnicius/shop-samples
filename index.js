@@ -9,7 +9,8 @@ var resData;
 const server = http.createServer((req, res) => {
 
     var url = req.url.match(new RegExp(/([^\?]+)\??.*/))[1];
-    console.log("REQUEST URL: " + req.url);
+    var id =
+        console.log("REQUEST URL: " + req.url);
 
     function productRequest(error, data) {
         if (error) {
@@ -18,7 +19,7 @@ const server = http.createServer((req, res) => {
 
         resData = data;
 
-        console.log(url);
+        console.log("url proReq: " + url);
 
         switch (url) {
             case '/product/index.html':
@@ -66,9 +67,10 @@ const server = http.createServer((req, res) => {
         resData = data;
 
 
-        console.log(url);
+        console.log("url Callback: " + url);
 
         switch (url) {
+            case '/index.html':
             case '/':
                 res.writeHead(200, { "Content-Type": "text/html" });
                 res.write(resData);
@@ -105,7 +107,10 @@ const server = http.createServer((req, res) => {
         fs.readFile('./index.html', callback);
     } else if (url === '/product/index.html') {
         fs.readFile('./product/index.html', productRequest);
-    } else {
+    } else if (url.match(/(\/product\/)/)) {
+        fs.readFile('.' + req.url, productRequest);
+    }
+    else {
         console.log("NEW REQ: " + req.url);
         fs.readFile('.' + req.url, callback);
     }
