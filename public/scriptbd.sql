@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`products` (
   `name` VARCHAR(45) NOT NULL,
   `price` VARCHAR(45) NOT NULL,
   `description` VARCHAR(45) NOT NULL,
+  `url` varchar(2083) NOT NULL,
   PRIMARY KEY (`pid`),
   UNIQUE INDEX `pid_UNIQUE` (`pid` ASC))
 ENGINE = InnoDB;
