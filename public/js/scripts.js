@@ -53,7 +53,7 @@ window.onload = () => {
       const img = document.createElement("img");
       img.setAttribute("src", product.getURL());
       img.setAttribute("class", "product-thumb");
-      img.addEventListener("click", function(e) {
+      img.addEventListener("click", function (e) {
         e.preventDefault();
         productPage(product.getID());
       });
@@ -62,7 +62,7 @@ window.onload = () => {
       a.setAttribute("href", "#");
       a.setAttribute("class", "product-name");
       a.appendChild(document.createTextNode(product.getName()));
-      a.addEventListener("click", function(e) {
+      a.addEventListener("click", function (e) {
         e.preventDefault();
         productPage(product.getID());
       });
@@ -76,7 +76,7 @@ window.onload = () => {
       button.setAttribute("class", "product-btn-add");
       button.appendChild(document.createTextNode("Add"));
 
-      button.addEventListener("click", function(e) {
+      button.addEventListener("click", function (e) {
         e.preventDefault();
         var quant = sessionStorage.getItem(product.id);
 
@@ -118,7 +118,7 @@ window.onload = () => {
       const div = document.createElement("div");
       div.setAttribute("class", "category-button");
 
-      div.addEventListener("click", function(e) {
+      div.addEventListener("click", function (e) {
         e.preventDefault();
         onClickCategory(category);
       });
@@ -139,25 +139,36 @@ window.onload = () => {
   /**
    * Popula a lista de categorias
    */
-  categories.forEach(c => {
-    categoriesList.push(
-      new Category(
-        c,
-        products
-          .filter(p => p.category === c)
-          .map(
-            product =>
-              new Product(
-                product.id,
-                product.name,
-                product.price,
-                product.description,
-                product.picture
+  getProducts().then((products) => {
+    console.log("Produtos", products);
+    getCategories().then((categories) => {
+      console.log("Categorias", categories);
+      categories.forEach(c => {
+        categoriesList.push(
+          new Category(
+            c.name,
+            products
+              .filter(p => p.catid === c.catid)
+              .map(
+                product =>
+                  new Product(
+                    product.pid,
+                    product.name,
+                    product.price,
+                    product.description,
+                    product.url
+                  )
               )
           )
-      )
-    );
+        );
+      });
+    }).catch((err) => {
+      console.log(err);
+    });
+  }).catch((err) => {
+    console.log(err);
   });
+
   // categoriesList.forEach(cl => console.log(cl.getType(), cl.getProducts()));
 
   if (selectedCategory) {
