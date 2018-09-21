@@ -29,7 +29,7 @@ connection.connect(function(err) {
 //   next();
 // });
 
-app.get("/", express.static("public"));
+app.use("/", express.static("public"));
 
 app.get(`${API_ROOT}/categories`, (req, res, next) => {
   connection.query("SELECT * FROM tecdb.categories;", (err, rows, fields) => {
