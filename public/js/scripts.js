@@ -162,6 +162,7 @@ window.onload = () => {
           )
         );
       });
+      generateCategoryList(categoriesList);
     }).catch((err) => {
       console.log(err);
     });
@@ -180,11 +181,6 @@ window.onload = () => {
       onClickCategory(categorySelected[0]);
     }
   }
-
-  /**
-   * Preeche lista no html dinamicamente
-   */
-  generateCategoryList(categoriesList);
 
   function setStack(categoryType) {
     const stackPages = document.getElementById("stack-pages");
