@@ -24,18 +24,6 @@ window.onload = () => {
 
   cartHover(shoppingList);
 
-  /**
-   * Constante para os tipos de categorias disponíveis
-   */
-  const categories = [
-    "Automotivo",
-    "Celulares e Comunicação",
-    "Educação",
-    "Eletrônicos, TV e Áudio",
-    "Eletrodomésticos",
-    "Eletroportáteis"
-  ];
-
   function productPage(id) {
     window.location.href = `product/index.html?id=${id}&category=${currentCategory}`;
   }
