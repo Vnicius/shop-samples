@@ -1,67 +1,33 @@
 const express = require("express");
 const app = express();
+const bodyParser = require('body-parser')
 const port = process.env.port || 3000;
 const mysql = require("mysql");
 
+const controllers = require('./controllers')
+
 const API_ROOT = '/api/v1';
 
-const connection = mysql.createConnection({
+const dbConnection = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: ""
 });
 
-connection.connect(function(err) {
+dbConnection.connect(function(err) {
   if (err) throw err;
   console.log("DB Connected!");
 });
 
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
 
-// app.use(function(req, res, next) {
-//   global.connection = mysql.createConnection({
-//     host: "localhost",
-//     user: "root",
-//     password: " ",
-//     database: "tecdb"
-//   });
-//   console.log("DB Connected!");
-//   connection.connect();
-//   next();
-// });
+// parse application/json
+app.use(bodyParser.json())
+
+controllers(app, dbConnection);
 
 app.use("/", express.static("public"));
-
-app.get(`${API_ROOT}/categories`, (req, res, next) => {
-  connection.query("SELECT * FROM tecdb.categories;", (err, rows, fields) => {
-    if (err) throw err;
-	res.json(rows);
-	next();
-  });
-});
-
-app.get(`${API_ROOT}/products`, (req, res, next) => {
-  connection.query("SELECT * FROM tecdb.products;", (err, rows, fields) => {
-	if (err) throw err;
-	res.status(200)
-	res.json(rows);
-	next();
-  });
-});
-
-app.get(`${API_ROOT}/products/:id`, (req, res, next) => {
-  if (req.params.id) {
-	  const { id } = req.params;
-    connection.query(`SELECT * FROM tecdb.products WHERE pid = ${id};`, (err, rows, fields) => {
-	  if (err) throw err;
-	  res.status(200)
-	  res.json(rows);
-	  return next();
-    });
-  } else {
-	  res.status(400);
-	  next();
-  }
-});
 
 app.listen(port, () => {
   console.log("Running...");

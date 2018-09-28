@@ -14,13 +14,13 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 -- -----------------------------------------------------
 -- Schema mydb
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
-USE `mydb` ;
+CREATE SCHEMA IF NOT EXISTS `tecdb` DEFAULT CHARACTER SET utf8 ;
+USE `tecdb` ;
 
 -- -----------------------------------------------------
 -- Table `mydb`.`categories`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`categories` (
+CREATE TABLE IF NOT EXISTS `tecdb`.`categories` (
   `catid` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NULL,
   PRIMARY KEY (`catid`),
@@ -31,13 +31,13 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `mydb`.`products`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`products` (
+CREATE TABLE IF NOT EXISTS `tecdb`.`products` (
   `pid` INT NOT NULL AUTO_INCREMENT,
-  `catid` INT NOT NULL,
+  `catid` INT,
+   FOREIGN KEY(catid) REFERENCES categories(catid),
   `name` VARCHAR(45) NOT NULL,
   `price` VARCHAR(45) NOT NULL,
   `description` VARCHAR(45) NOT NULL,
-  `url` varchar(2083) NOT NULL,
   PRIMARY KEY (`pid`),
   UNIQUE INDEX `pid_UNIQUE` (`pid` ASC))
 ENGINE = InnoDB;
