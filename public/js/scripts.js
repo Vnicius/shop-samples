@@ -139,6 +139,12 @@ window.onload = () => {
   /**
    * Popula a lista de categorias
    */
+
+  // como utilizar funcoes async
+  //  getProductById(1)
+  //   .then(product => { /* o que fazer com o resultado */ })
+  //   .catch(error => { /* o que fazer com o erro */ })
+
   getProducts().then((products) => {
     console.log("Produtos", products);
     getCategories().then((categories) => {
