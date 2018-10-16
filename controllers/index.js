@@ -1,5 +1,7 @@
 const category = require('./category');
 const product = require('./product');
+const user = require('./user');
+
 
 function controllers(server, dbConnection) {
   server.get('/api', (req, res, next) => {
@@ -14,6 +16,7 @@ function controllers(server, dbConnection) {
   // Chamada dos controllers
   category(server, dbConnection);
   product(server, dbConnection);
+  user(server,dbConnection);
 }
 
 module.exports = controllers;

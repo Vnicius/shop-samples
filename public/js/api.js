@@ -1,4 +1,5 @@
 const API_URL = "/api/v1";
+const API_URL_USERS = `${API_URL}/users`;
 const API_URL_PRODUCTS = `${API_URL}/products`;
 const API_URL_CATEGORIES = `${API_URL}/categories`;
 
@@ -99,6 +100,45 @@ function updateProduct(product) {
 
 // Delete
 function deleteProduct(productID) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const res = await axios.delete(`${API_URL_PRODUCTS}/${productID}`);
+            resolve(res.data);
+        } catch (e) {
+            reject(e);
+        }
+    });
+}
+
+
+/////////Users
+
+// Create
+function createUser(user) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const res = await axios.post(API_URL_USERS, user);
+            resolve(res.data);
+        } catch (e) {
+            reject(e);
+        }
+    });
+}
+
+// Read By ID
+function getUserByLogin(login) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const res = await axios.get(`${API_URL_USERS}/${login}`);
+            resolve(res.data);
+        } catch (e) {
+            reject(e);
+        }
+    });
+}
+
+// Delete
+function deleteUser(userID) {
     return new Promise(async (resolve, reject) => {
         try {
             const res = await axios.delete(`${API_URL_PRODUCTS}/${productID}`);

@@ -17,7 +17,27 @@ window.onload = () => {
       }
     }
 
-      // como utilizar funcoes async
+    function login(user) {
+        getUserByLogin(user.login)
+        .then( data => {
+            console.log(data);
+            // argon2.verify(data.password, user.password).then(match => {
+            //     if (match) {
+            //       // password match
+            //     } else {
+            //       // password did not match
+            //     }
+            //   }).catch(err => {
+            //     // internal failure
+            //   }); 
+        })
+        .catch(console.error);
+    }
+
+
+
+
+// como utilizar funcoes async
   //  getProductById(1)
   //   .then(product => { /* o que fazer com o resultado */ })
   //   .catch(error => { /* o que fazer com o erro */ })
@@ -60,6 +80,8 @@ window.onload = () => {
     .catch((err) => {
         console.log(err);
     });
+
+
 
 };
   

@@ -42,6 +42,13 @@ CREATE TABLE IF NOT EXISTS `tecdb`.`products` (
   UNIQUE INDEX `pid_UNIQUE` (`pid` ASC))
 ENGINE = InnoDB;
 
+CREATE TABLE `tecdb`.`users` ( 
+  `uid` INT NOT NULL AUTO_INCREMENT , 
+  `login` VARCHAR(45) NOT NULL , 
+  `password` VARCHAR(45) NOT NULL , 
+  PRIMARY KEY (`uid`)) 
+  ENGINE = InnoDB;
+
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
