@@ -24,7 +24,7 @@ Utilizar o script **scriptbd.sql** para a criação do Banco de Dados SQL.
 
 ### Criação Da Interface do Usuário
 
-![Print da Página Inicial]()
+![Print da Página Inicial](./images/usuario.png)
 
 ![Print da Página Do Produto]()
 
