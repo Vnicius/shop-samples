@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Layout, Menu, Breadcrumb, Icon, Card, Row, Col } from 'antd';
+import { Layout, Menu, Breadcrumb, Icon, Card, Row, Col, Button } from 'antd';
 
 import Api from '../api';
 
@@ -34,18 +34,24 @@ class Main extends Component {
 			const name = category.poi.name;
       let image = category._links ? category._links.photo.href : 'http://www.clinicaprimacordis.com.br/wp-content/uploads/2016/10/orionthemes-placeholder-image.png';
 			return (
-				<Col style={{ margin: 16 }} span={5}>
-					<Card
-						hoverable
-						style={{ width: 240 }}
-						cover={<img alt="example" src={image} />}
-					>
-						<Meta title={name} description="" />
-					</Card>
-				</Col>
+					<Col style={{ margin: 16 }} span={5}>
+						<Card
+							hoverable
+							style={{ width: 240 }}
+							cover={<img alt="example" src={image} />}
+						>
+							<Meta title={name} description="" />
+						</Card>
+
+						<Button onClick={e=>this.onClick(name)} >Adicionar</Button>
+					</Col>
 			);
 		});
 	};
+
+	onClick = (indice) => {
+		console.log(indice + "clicado!")
+	}
 
 	render() {
 		return (
