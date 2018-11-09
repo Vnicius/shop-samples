@@ -28,7 +28,7 @@ class Products extends Component {
                     <Card
                       hoverable
                       style={{ width: 240 }}
-                      cover={<img alt="example" src={image} />}
+                      cover={<img alt="example" src={image} style={{ width: "200px", hei }} />}
                     >
                       <Meta title={name} description="" />
                     </Card>

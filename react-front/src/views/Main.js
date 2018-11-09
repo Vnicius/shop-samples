@@ -91,9 +91,11 @@ class Main extends Component {
       categories.map(category => (
         <Menu.Item
           key={category.catid}
-          onClick={this.onSelectCategory(category.catid)}
+          onClick={this.onSelectCategory(category)}
         >
-          {category.name}
+        <Link to={`/${category.catid}`} >
+            {category.name}
+        </Link> 
         </Menu.Item>
       ))
     );
@@ -105,10 +107,12 @@ class Main extends Component {
     return category.length !== 0 ? category[0].name : "";
   };
 
-  onSelectCategory = id => () => {
+  onSelectCategory = category => () => {
     this.setState({
-      selectedCategory: id
+      selectedCategory: category.catid
     });
+
+    this.goToStack({ name: category.name, to: `/${category.catid}` })();
   };
 
   addStack = stage => {
@@ -124,7 +128,7 @@ class Main extends Component {
   goToStack = stage => () => {
     const { stack } = this.state;
     let index = stack.findIndex(element => element.name === stage.name);
-
+    console.log(index)
     if (index !== -1) {
       this.setState({
         stack: stack.slice(0, index)
