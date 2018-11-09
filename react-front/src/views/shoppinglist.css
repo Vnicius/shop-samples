@@ -1,0 +1,7 @@
+.shoppinglist:hover {
+    cursor: pointer;
+}
+
+.shoppinglist-icon {
+    margin: 5px 0 !important;
+}

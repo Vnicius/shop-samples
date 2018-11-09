@@ -1,113 +1,266 @@
-import React, { Component } from 'react';
-import { Layout, Menu, Breadcrumb, Icon, Card, Row, Col, Button } from 'antd';
+import React, { Component } from "react";
+import { Layout, Menu, Breadcrumb, Icon, Row } from "antd";
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+  Redirect
+} from "react-router-dom";
 
-import Api from '../api';
+import Api from "../api";
+import ShoppingList from "./ShoppingList";
+import Products from "./Products";
+import Product from "./Product";
 
-const { Meta } = Card;
 const { SubMenu } = Menu;
 const { Header, Content, Footer, Sider } = Layout;
 
 class Main extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			categories: [],
-		};
-	}
+  constructor(props) {
+    super(props);
+    this.state = {
+      categories: [],
+      products: [],
+      selectedCategory: "",
+      selectedProducts: [],
+      stack: []
+    };
+  }
 
-	async componentDidMount() {
-		try {
-			const res = await Api.getCategories();
-			console.log(res.data);
-			this.setState({ categories: res.data._embedded.poiResourceList });
-		} catch (error) {
-			console.error(error);
-		}
-	}
+  componentWillMount() {
+    this.getCategories();
+    this.getProducts();
+    this.setState({ selectedProducts: this.props.selectedProducts });
+  }
 
-	componentDidUpdate(prevProps, prevState) {
-		console.log({ ...this.state.categories });
-	}
+  componentWillUpdate() {
+    console.log(this.props);
+  }
 
-	renderCards = () => {
-		return this.state.categories.map(category => {
-			const name = category.poi.name;
-      let image = category._links ? category._links.photo.href : 'http://www.clinicaprimacordis.com.br/wp-content/uploads/2016/10/orionthemes-placeholder-image.png';
-			return (
-					<Col style={{ margin: 16 }} span={5}>
-						<Card
-							hoverable
-							style={{ width: 240 }}
-							cover={<img alt="example" src={image} />}
-						>
-							<Meta title={name} description="" />
-						</Card>
+  getCategories = () => {
+    Api.getCategories()
+      .then(response => {
+        this.setState({ categories: response.data }, this.getSelectedCategory);
+      })
+      .catch(console.error);
+  };
 
-						<Button onClick={e=>this.onClick(name)} >Adicionar</Button>
-					</Col>
-			);
-		});
-	};
+  getSelectedCategory = () => {
+    const { categories } = this.state;
+    if (categories.length !== 0)
+      this.setState({ selectedCategory: categories[0].catid });
+  };
 
-	onClick = (indice) => {
-		console.log(indice + "clicado!")
-	}
+  getProducts = () => {
+    Api.getProducts()
+      .then(response => {
+        this.setState({
+          products: response.data
+        });
+      })
+      .catch(console.error);
+  };
 
-	render() {
-		return (
-			<Layout>
-				<Header className="header">
-					<div className="logo" />
-					<Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']} style={{ lineHeight: '64px' }}>
-						<Menu.Item key="1">
-							<span>
-								<Icon type="shop" theme="outlined" />
-								Sample shop
-							</span>
-						</Menu.Item>
-					</Menu>
-				</Header>
-				<Content style={{ padding: '0 50px' }}>
-					<Breadcrumb style={{ margin: '16px 0' }}>
-						<Breadcrumb.Item>Home</Breadcrumb.Item>
-						<Breadcrumb.Item>List</Breadcrumb.Item>
-						<Breadcrumb.Item>App</Breadcrumb.Item>
-					</Breadcrumb>
-					<Layout style={{ padding: '24px 0', background: '#fff' }}>
-						<Sider width={200} style={{ background: '#fff' }}>
-							<Menu
-								mode="inline"
-								defaultSelectedKeys={['1']}
-								defaultOpenKeys={['sub1']}
-								style={{ height: '100%' }}
-							>
-								<SubMenu
-									key="sub1"
-									title={
-										<span>
-											<Icon type="tags" theme="outlined" />
-											Categorias
-										</span>
-									}
-								>
-									<Menu.Item key="1">option1</Menu.Item>
-									<Menu.Item key="2">option2</Menu.Item>
-									<Menu.Item key="3">option3</Menu.Item>
-									<Menu.Item key="4">option4</Menu.Item>
-								</SubMenu>
-							</Menu>
-						</Sider>
-						<Content style={{ padding: '0 24px', minHeight: 280 }}>
-							<Row type="flex" justify="center">
-								{this.renderCards()}
-							</Row>
-						</Content>
-					</Layout>
-				</Content>
-				<Footer style={{ textAlign: 'center' }}>Projeto Tópicos especiais em computação ©2018</Footer>
-			</Layout>
-		);
-	}
+  renderCards = props => {
+    const { products, selectedCategory, categories } = this.state;
+
+    if (props.match.params.catid && categories.length !== 0) {
+      let catid = props.match.params.catid;
+      this.addStack({
+        name: this.getCategoryName(parseInt(catid)),
+        to: `/${catid}`
+      });
+    }
+
+    return (
+      products.length !== 0 && (
+        <Products
+          match={props.match}
+          products={products}
+          addProduct={this.props.addProduct}
+        />
+      )
+    );
+  };
+
+  showCategories = () => {
+    const { categories } = this.state;
+
+    return (
+      categories.length !== 0 &&
+      categories.map(category => (
+        <Menu.Item
+          key={category.catid}
+          onClick={this.onSelectCategory(category.catid)}
+        >
+          {category.name}
+        </Menu.Item>
+      ))
+    );
+  };
+
+  getCategoryName = id => {
+    const { categories } = this.state;
+    let category = categories.filter(element => element.catid === id);
+    return category.length !== 0 ? category[0].name : "";
+  };
+
+  onSelectCategory = id => () => {
+    this.setState({
+      selectedCategory: id
+    });
+  };
+
+  addStack = stage => {
+    const { stack } = this.state;
+
+    if (stack.findIndex(element => element.name === stage.name) === -1) {
+      this.setState({
+        stack: [...stack, stage]
+      });
+    }
+  };
+
+  goToStack = stage => () => {
+    const { stack } = this.state;
+    let index = stack.findIndex(element => element.name === stage.name);
+
+    if (index !== -1) {
+      this.setState({
+        stack: stack.slice(0, index)
+      });
+    }
+  };
+
+  getStack = () => {
+    const { stack } = this.state;
+
+    return (
+      <Breadcrumb style={{ margin: "16px 0", display: "inline-block" }}>
+        <Breadcrumb.Item>
+          <Link to="/">Home</Link>
+        </Breadcrumb.Item>
+        {stack.length !== 0 &&
+          stack.map(element => (
+            <Breadcrumb.Item
+              key={element.name}
+              onClick={this.goToStack(element)}
+            >
+              <Link to={element.to}>{element.name}</Link>
+            </Breadcrumb.Item>
+          ))}
+      </Breadcrumb>
+    );
+  };
+
+  toProduct = props => {
+    const { products } = this.state;
+    const { addProduct } = this.props;
+    let product = products[0];
+
+    if (props.match.params.pid) {
+      let pid = parseInt(props.match.params.pid);
+      let index = products.findIndex(element => element.pid === pid);
+      if (index !== -1) {
+        product = products[index];
+        this.addStack({
+          name: product.name,
+          to: `/product/${product.pid}`
+        });
+        this.addStack({
+          name: this.getCategoryName(product.catid),
+          to: `/${product.catid}`
+        });
+      }
+    }
+
+    console.log(product);
+
+    return product ? <Product product={product} addProduct={addProduct} /> : "";
+  };
+
+  render() {
+    return (
+      <Router>
+        <Layout>
+          <Header className="header">
+            <div className="logo" />
+            <Menu
+              theme="dark"
+              mode="horizontal"
+              defaultSelectedKeys={["2"]}
+              style={{ lineHeight: "64px" }}
+            >
+              <Menu.Item key="1">
+                <span>
+                  <Icon type="shop" theme="outlined" />
+                  Sample shop
+                </span>
+              </Menu.Item>
+            </Menu>
+          </Header>
+          <Content style={{ padding: "0 50px" }}>
+            <div
+              style={{
+                display: "flex",
+                width: "100%",
+                justifyContent: "space-between"
+              }}
+            >
+              {this.getStack()}
+              <ShoppingList
+                style={{ display: "inline", paddingTop: "8px" }}
+                products={this.props.selectedProducts}
+              />
+            </div>
+
+            <Layout style={{ padding: "24px 0", background: "#fff" }}>
+              <Sider width={200} style={{ background: "#fff" }}>
+                <Menu
+                  mode="inline"
+                  defaultSelectedKeys={["1"]}
+                  defaultOpenKeys={["sub1"]}
+                  style={{ height: "100%" }}
+                >
+                  <SubMenu
+                    key="sub1"
+                    title={
+                      <span>
+                        <Icon type="tags" theme="outlined" />
+                        Categorias
+                      </span>
+                    }
+                  >
+                    {this.showCategories()}
+                  </SubMenu>
+                </Menu>
+              </Sider>
+              <Content style={{ padding: "0 24px", minHeight: 280 }}>
+                <Route
+                  path="/"
+                  exact
+                  render={() =>
+                    this.state.categories.length !== 0 && (
+                      <Redirect to={`/${this.state.categories[0].catid}`} />
+                    )
+                  }
+                />
+                <Route
+                  path="/:catid"
+                  exact
+                  render={props => this.renderCards(props)}
+                />
+                <Route path="/product/:pid" exact render={this.toProduct} />
+              </Content>
+            </Layout>
+          </Content>
+          <Footer style={{ textAlign: "center" }}>
+            Projeto Tópicos especiais em computação ©2018
+          </Footer>
+        </Layout>
+      </Router>
+    );
+  }
 }
 
 export default Main;

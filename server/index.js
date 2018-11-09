@@ -3,7 +3,7 @@ const app = express();
 const bodyParser = require('body-parser')
 const port = process.env.port || 3000;
 const mysql = require("mysql");
-
+const cors = require('cors')
 
 const controllers = require('./controllers')
 
@@ -19,6 +19,8 @@ dbConnection.connect(function(err) {
   if (err) throw err;
   console.log("DB Connected!");
 });
+
+app.use(cors())
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
